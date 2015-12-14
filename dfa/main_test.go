@@ -42,6 +42,18 @@ q2`))
 	}
 }
 
+func TestNewAutomatonWhenInvalidTransitionFunc(t *testing.T) {
+	r := bytes.NewReader([]byte(`q1 q2 q3
+0 1
+q1,0,q1 q1,1,q2 q2,0,q3 q2,1,q2 q3,0 1,q2 q3,1,q2
+q1
+q2`))
+	_, err := NewAutomaton(r)
+	if err == nil {
+		t.Error("should return error, but got nil")
+	}
+}
+
 func TestRunAutomaton(t *testing.T) {
 	assert := func(input []string, expected bool) {
 		res, err := M1.Run(input)

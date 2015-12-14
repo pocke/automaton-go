@@ -58,7 +58,9 @@ func NewAutomaton(r io.Reader) (*Automaton, error) {
 	sc.Scan()
 	for _, v := range strings.Split(sc.Text(), " ") {
 		t := strings.Split(v, ",")
-		// TODO: check len
+		if len(t) != 3 {
+			return nil, fmt.Errorf("%v is not valid as a transition function", t)
+		}
 		q := t[0]
 		s := t[1]
 		q2 := t[2]
