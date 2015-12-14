@@ -64,21 +64,47 @@ func NewAutomaton(r io.Reader) (*Automaton, error) {
 		q := t[0]
 		s := t[1]
 		q2 := t[2]
+
+		if !Contain(a.States, q) {
+			return nil, fmt.Errorf("%s is not valid as state", q)
+		}
+		if !Contain(a.Alphabet, s) {
+			return nil, fmt.Errorf("%s is not valid as alphabet", q2)
+		}
+		if !Contain(a.States, q2) {
+			return nil, fmt.Errorf("%s is not valid as state", q2)
+		}
+
 		if _, exist := a.Transitions[q]; !exist {
 			a.Transitions[q] = make(map[string]string)
 		}
 		a.Transitions[q][s] = q2
 	}
+	if len(a.Transitions) != len(a.States) {
+		return nil, fmt.Errorf("Transition functions is not valid")
+	}
+	for _, f := range a.Transitions {
+		if len(f) != len(a.Alphabet) {
+			return nil, fmt.Errorf("Transition functions is not valid")
+		}
+	}
 
 	// Start State
 	sc.Scan()
 	a.StartState = sc.Text()
+	if !Contain(a.States, a.StartState) {
+		return nil, fmt.Errorf("%s is not valid as state", a.StartState)
+	}
 
 	// Set of Accept States
 	sc.Scan()
 	a.AcceptStates = strings.Split(sc.Text(), " ")
+	for _, s := range a.AcceptStates {
+		if !Contain(a.States, s) {
+			return nil, fmt.Errorf("%s is not valid as state", s)
+		}
+	}
 
-	// TODO: validate
 	return a, nil
 }
 
