@@ -90,10 +90,14 @@ func (a *Automaton) Run(input []string) (bool, error) {
 		q = a.Transitions[q][i]
 	}
 
-	for _, ac := range a.AcceptStates {
-		if ac == q {
-			return true, nil
+	return Contain(a.AcceptStates, q), nil
+}
+
+func Contain(a []string, s string) bool {
+	for _, v := range a {
+		if v == s {
+			return true
 		}
 	}
-	return false, nil
+	return false
 }
